@@ -11,14 +11,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
-@WebServlet()
+@WebServlet(name = "customerServlet", value = "/customer")
 public class CustomerServlet extends HttpServlet {
 
     private CustomerService customerService = new CustomerServiceImpl();
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response){
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        String action = request.getParameter("action");
 
+        try {
+            if (action == null || action.equals("list")) {
+                List<Customer> customers = customerService.getAllCustomers();
+
+                customers.forEach(customer -> {
+                    System.out.println(customer.getId()+" - "+customer.getFirstName());
+                });
+
+                request.setAttribute("customers", customers);
+                request.getRequestDispatcher("/WEB-INF/views/customer.jsp").forward(request, response);
+            }
+        } catch (SQLException e) {
+            throw new ServletException(e);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {

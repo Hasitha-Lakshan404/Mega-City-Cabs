@@ -4,9 +4,10 @@ import com.icbt.car_rental.dao.CustomerDao;
 import com.icbt.car_rental.model.Customer;
 import com.icbt.car_rental.util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CustomerDaoImpl implements CustomerDao {
 
@@ -23,5 +24,27 @@ public class CustomerDaoImpl implements CustomerDao {
             pstmt.setString(6, customer.getContactNo());
             pstmt.executeUpdate();
         }
+    }
+
+    @Override
+    public List<Customer> getAllCustomers() throws SQLException {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT * FROM customer";
+        try (Connection conn = DBConnection.getInstance().getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                customers.add(new Customer(
+                        rs.getLong("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("address"),
+                        rs.getString("contactNo")
+                ));
+            }
+        }
+        return customers;
     }
 }
