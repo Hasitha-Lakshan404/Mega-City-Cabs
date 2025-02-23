@@ -3,7 +3,7 @@ package com.icbt.car_rental.model;
 public class Customer {
     private String firstName;
     private String lastName;
-    private String userName;
+    private String email;
     private String password;
     private String address;
     private String contactNo;
@@ -12,10 +12,10 @@ public class Customer {
 
     }
 
-    public Customer(String firstName, String lastName, String userName, String password, String address, String contactNo) {
+    public Customer(String firstName, String lastName, String email, String password, String address, String contactNo) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userName = userName;
+        this.email = email;
         this.password = password;
         this.address = address;
         this.contactNo = contactNo;
@@ -24,7 +24,7 @@ public class Customer {
     private Customer(Builder builder) {
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
-        this.userName = builder.userName;
+        this.email = builder.email;
         this.password = builder.password;
         this.address = builder.address;
         this.contactNo = builder.contactNo;
@@ -50,12 +50,12 @@ public class Customer {
         this.lastName = lastName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -85,7 +85,7 @@ public class Customer {
     public static class Builder {
         private String firstName;
         private String lastName;
-        private String userName;
+        private String email;
         private String password;
         private String address;
         private String contactNo;
@@ -104,7 +104,7 @@ public class Customer {
         }
 
         public Builder userName(String userName) {
-            this.userName = userName;
+            this.email = userName;
             return this;
         }
 
