@@ -6,12 +6,11 @@ import com.icbt.car_rental.model.Customer;
 import com.icbt.car_rental.service.CustomerService;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerDao customerDao = new CustomerDaoImpl();
+    private final CustomerDao customerDao = new CustomerDaoImpl();
 
     @Override
     public void createCustomer(Customer customer) throws SQLException {
@@ -21,5 +20,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> getAllCustomers() throws SQLException {
         return customerDao.getAllCustomers();
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) throws SQLException {
+        customerDao.updateCustomer(customer);
+    }
+
+    @Override
+    public void deleteCustomer(int customerId) {
+        customerDao.deleteCustomer(customerId);
     }
 }

@@ -18,48 +18,59 @@ public class CustomerServlet extends HttpServlet {
 
     private CustomerService customerService = new CustomerServiceImpl();
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        String action = request.getParameter("action");
-
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            if (action == null || action.equals("list")) {
-                List<Customer> customers = customerService.getAllCustomers();
-
-                customers.forEach(customer -> {
-                    System.out.println(customer.getId()+" - "+customer.getFirstName());
-                });
-
-                request.setAttribute("customers", customers);
-                request.getRequestDispatcher("/WEB-INF/views/customer.jsp").forward(request, response);
-            }
+            List<Customer> customers = customerService.getAllCustomers();
+            request.setAttribute("customers", customers);
+            request.getRequestDispatcher("/WEB-INF/views/customerManagement.jsp").forward(request, response);
         } catch (SQLException e) {
-            throw new ServletException(e);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ServletException("Database error retrieving customers", e);
         }
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
 
         try {
-            if (action.equals("create")) {
-                Customer customer = new Customer();
-                customer.setFirstName(request.getParameter("firstName"));
-                customer.setLastName(request.getParameter("lastName"));
-                customer.setEmail(request.getParameter("email"));
-                customer.setPassword(request.getParameter("password"));
-                customer.setAddress(request.getParameter("address"));
-                customer.setContactNo(request.getParameter("contactNo"));
+            switch (action) {
+                case "create":
+                    Customer newCustomer = new Customer();
+                    newCustomer.setFirstName(request.getParameter("firstName"));
+                    newCustomer.setLastName(request.getParameter("lastName"));
+                    newCustomer.setEmail(request.getParameter("email"));
+                    newCustomer.setPassword(request.getParameter("password"));
+                    newCustomer.setAddress(request.getParameter("address"));
+                    newCustomer.setContactNo(request.getParameter("contactNo"));
+                    customerService.createCustomer(newCustomer);
+                    break;
 
-                customerService.createCustomer(customer);
+                case "update":
+                    int id = Integer.parseInt(request.getParameter("id"));
+                    Customer updateCustomer = new Customer();
+                    updateCustomer.setId(id);
+                    updateCustomer.setFirstName(request.getParameter("firstName"));
+                    updateCustomer.setLastName(request.getParameter("lastName"));
+                    updateCustomer.setEmail(request.getParameter("email"));
+                    updateCustomer.setPassword(request.getParameter("password"));
+                    updateCustomer.setAddress(request.getParameter("address"));
+                    updateCustomer.setContactNo(request.getParameter("contactNo"));
+                    customerService.updateCustomer(updateCustomer);
+                    break;
+
+                case "delete":
+                    int deleteId = Integer.parseInt(request.getParameter("id"));
+                    customerService.deleteCustomer(deleteId);
+                    break;
+
+                default:
+                    break;
             }
+            response.sendRedirect("customer");
         } catch (SQLException e) {
-            throw new ServletException(e);
+            throw new ServletException("Database error processing " + action, e);
         }
     }
-
 }

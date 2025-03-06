@@ -6,7 +6,6 @@ import com.icbt.car_rental.util.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CustomerDaoImpl implements CustomerDao {
@@ -29,7 +28,7 @@ public class CustomerDaoImpl implements CustomerDao {
     @Override
     public List<Customer> getAllCustomers() throws SQLException {
         List<Customer> customers = new ArrayList<>();
-        String sql = "SELECT * FROM customer";
+        String sql = "SELECT * FROM customer ORDER BY id DESC";
         try (Connection conn = DBConnection.getInstance().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -46,5 +45,32 @@ public class CustomerDaoImpl implements CustomerDao {
             }
         }
         return customers;
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) throws SQLException {
+        String sql = "UPDATE customer SET first_name = ?,last_name = ?, email = ?, address = ?, contactNo = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, customer.getFirstName());
+            pstmt.setString(2, customer.getLastName());
+            pstmt.setString(3, customer.getEmail());
+            pstmt.setString(4, customer.getAddress());
+            pstmt.setString(5, customer.getContactNo());
+            pstmt.setLong(6, customer.getId());
+            pstmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public void deleteCustomer(int customerId) {
+        String sql = "DELETE FROM customer WHERE id = ?";
+        try (Connection conn = DBConnection.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, customerId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

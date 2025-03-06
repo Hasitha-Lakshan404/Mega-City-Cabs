@@ -8,4 +8,8 @@ import java.util.List;
 public interface CustomerDao {
     void addCustomer(Customer customer) throws SQLException;
     List<Customer> getAllCustomers() throws SQLException;
+
+    void updateCustomer(Customer customer) throws SQLException;
+
+    void deleteCustomer(int customerId);
 }
