@@ -23,7 +23,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 240px;
+            width: 220px;
             padding: 20px;
             background: linear-gradient(135deg, rgba(78,77,91,1) 8%, rgba(21,21,55,1) 100%, rgba(0,212,255,1) 100%);
             color: #fff;
@@ -60,10 +60,10 @@
     <hr>
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="customerManagement.jsp">Customer Management</a>
+            <a class="nav-link active" href="customer">Customer Management</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="carManagement.jsp">Car Management</a>
+            <a class="nav-link" href="vehicle">Vehicle Management</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="carInventoryManagement.jsp">Car Inventory Management</a>
