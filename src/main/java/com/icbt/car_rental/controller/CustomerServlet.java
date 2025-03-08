@@ -44,7 +44,7 @@ public class CustomerServlet extends HttpServlet {
                     newCustomer.setPassword(request.getParameter("password"));
                     newCustomer.setAddress(request.getParameter("address"));
                     newCustomer.setContactNo(request.getParameter("contactNo"));
-                    customerService.createCustomer(newCustomer);
+                    customerService.addCustomer(newCustomer);
                     break;
 
                 case "update":

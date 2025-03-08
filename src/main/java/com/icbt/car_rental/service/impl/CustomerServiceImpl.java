@@ -13,7 +13,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerDao customerDao = new CustomerDaoImpl();
 
     @Override
-    public void createCustomer(Customer customer) throws SQLException {
+    public void addCustomer(Customer customer) throws SQLException {
         customerDao.addCustomer(customer);
     }
 

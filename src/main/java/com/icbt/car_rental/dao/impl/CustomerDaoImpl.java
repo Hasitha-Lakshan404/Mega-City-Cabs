@@ -12,7 +12,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public void addCustomer(Customer customer) throws SQLException {
-        String sql = "INSERT INTO customer (first_name, last_name, email,password,address,contactNo) VALUES (?, ?, ?,?,?,?)";
+        String sql = "INSERT INTO customer (first_name, last_name, email,password,address,contactNo,nic) VALUES (?, ?, ?,?,?,?,?)";
         try (Connection conn = DBConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, customer.getFirstName());
@@ -21,6 +21,7 @@ public class CustomerDaoImpl implements CustomerDao {
             pstmt.setString(4, customer.getPassword());
             pstmt.setString(5, customer.getAddress());
             pstmt.setString(6, customer.getContactNo());
+            pstmt.setString(7, customer.getNic());
             pstmt.executeUpdate();
         }
     }
@@ -40,7 +41,8 @@ public class CustomerDaoImpl implements CustomerDao {
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("address"),
-                        rs.getString("contactNo")
+                        rs.getString("contactNo"),
+                        rs.getString("nic")
                 ));
             }
         }
@@ -49,7 +51,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
     @Override
     public void updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE customer SET first_name = ?,last_name = ?, email = ?, address = ?, contactNo = ? WHERE id = ?";
+        String sql = "UPDATE customer SET first_name = ?,last_name = ?, email = ?, address = ?, contactNo = ?, nic = ? WHERE id = ?";
         try (Connection conn = DBConnection.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, customer.getFirstName());
@@ -57,7 +59,8 @@ public class CustomerDaoImpl implements CustomerDao {
             pstmt.setString(3, customer.getEmail());
             pstmt.setString(4, customer.getAddress());
             pstmt.setString(5, customer.getContactNo());
-            pstmt.setLong(6, customer.getId());
+            pstmt.setString(6, customer.getNic());
+            pstmt.setLong(7, customer.getId());
             pstmt.executeUpdate();
         }
     }

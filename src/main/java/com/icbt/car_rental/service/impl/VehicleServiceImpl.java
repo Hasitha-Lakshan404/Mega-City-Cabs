@@ -14,7 +14,7 @@ public class VehicleServiceImpl implements VehicleService {
     private final VehicleDao customerDao = new VehicleDaoImpl();
 
     @Override
-    public void createVehicle(Vehicle customer) throws SQLException {
+    public void addVehicle(Vehicle customer) throws SQLException {
         customerDao.addVehicle(customer);
     }
 

@@ -64,6 +64,14 @@
             <div class="modal-body">
                 <form action="signup" method="post">
                     <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="signupEmail" class="form-label">Email</label>
                         <input type="email" class="form-control" id="signupEmail" name="email" required>
                     </div>
@@ -74,6 +82,18 @@
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Confirm Password</label>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nic" class="form-label">NIC</label>
+                        <input type="text" class="form-control" id="nic" name="nic" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactNo" class="form-label">Contact No</label>
+                        <input type="text" class="form-control" id="contactNo" name="contactNo" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Sign Up</button>
                 </form>

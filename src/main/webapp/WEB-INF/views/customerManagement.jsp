@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.icbt.car_rental.model.Customer" %>
 <html>
 <head>
     <title>Customer Management</title>
@@ -107,6 +109,10 @@
                 <div class="mb-3 col-md-4">
                     <label for="contactNo" class="form-label">Contact No</label>
                     <input type="text" class="form-control" id="contactNo" name="contactNo" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="nic" class="form-label">NIC</label>
+                    <input type="text" class="form-control" id="nic" name="nic" required>
                 </div>
             </section>
 
