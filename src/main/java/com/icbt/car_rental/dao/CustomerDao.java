@@ -12,4 +12,6 @@ public interface CustomerDao {
     void updateCustomer(Customer customer) throws SQLException;
 
     void deleteCustomer(int customerId);
+
+    boolean validate(Customer customer)throws SQLException;
 }

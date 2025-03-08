@@ -73,4 +73,21 @@ public class CustomerDaoImpl implements CustomerDao {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean validate(Customer customer) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM customer WHERE email = ? AND password = ?";
+        try (Connection conn = DBConnection.getInstance().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, customer.getEmail());
+            pstmt.setString(2, customer.getPassword());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

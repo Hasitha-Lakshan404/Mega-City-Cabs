@@ -31,4 +31,9 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomer(int customerId) {
         customerDao.deleteCustomer(customerId);
     }
+
+    @Override
+    public boolean validate(Customer customer) throws SQLException {
+       return customerDao.validate(customer);
+    }
 }
