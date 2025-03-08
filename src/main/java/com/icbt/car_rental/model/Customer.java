@@ -8,20 +8,32 @@ public class Customer {
     private String password;
     private String address;
     private String contactNo;
+    public String nic;
+
+    public String getNic() {
+        return nic;
+    }
+
+    public void setNic(String nic) {
+        this.nic = nic;
+    }
+
+    public Customer(long id, String firstName, String lastName, String email, String password, String address, String contactNo, String nic) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.contactNo = contactNo;
+        this.nic = nic;
+    }
 
     public Customer() {
 
     }
 
-    public Customer(long id, String firstName, String lastName, String email, String password, String address, String contactNo) {
-        this.setId(id);
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setEmail(email);
-        this.setPassword(password);
-        this.setAddress(address);
-        this.setContactNo(contactNo);
-    }
+
 
     private Customer(Builder builder) {
         this.setId(builder.id);
@@ -31,6 +43,7 @@ public class Customer {
         this.setPassword(builder.password);
         this.setAddress(builder.address);
         this.setContactNo(builder.contactNo);
+        this.setNic(builder.nic);
     }
 
     public static Builder builder() {
@@ -102,6 +115,7 @@ public class Customer {
         private String password;
         private String address;
         private String contactNo;
+        private String nic;
 
         public Builder() {
         }
@@ -143,6 +157,11 @@ public class Customer {
 
         public Builder email(String email) {
             this.email = email;
+            return this;
+        }
+
+        public Builder nic(String nic) {
+            this.nic = nic;
             return this;
         }
 

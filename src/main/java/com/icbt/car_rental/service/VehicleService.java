@@ -6,7 +6,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface VehicleService {
-    void createVehicle(Vehicle vehicle) throws SQLException;
+    void addVehicle(Vehicle vehicle) throws SQLException;
+
     List<Vehicle> getAllVehicles() throws SQLException;
 
     void updateVehicle(Vehicle updateVehicle) throws SQLException;

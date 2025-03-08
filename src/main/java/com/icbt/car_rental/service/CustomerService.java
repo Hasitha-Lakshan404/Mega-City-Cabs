@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface CustomerService {
-    void createCustomer(Customer customer) throws SQLException;
+    void addCustomer(Customer customer) throws SQLException;
     List<Customer> getAllCustomers() throws SQLException;
 
     void updateCustomer(Customer updateCustomer) throws SQLException;

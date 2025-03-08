@@ -48,7 +48,7 @@ public class VehicleServlet extends HttpServlet {
                     newVehicle.setRentPerDay(new BigDecimal(request.getParameter("rentPerDay")));
                     newVehicle.setStatus(request.getParameter("status"));
 
-                    vehicleService.createVehicle(newVehicle);
+                    vehicleService.addVehicle(newVehicle);
                     break;
 
                 case "update":
