@@ -6,8 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.icbt.car_rental.model.Vehicle" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Vehicle Management</title>
@@ -93,9 +92,19 @@
                     <label for="model" class="form-label">Model</label>
                     <input type="text" class="form-control" id="model" name="model" required>
                 </div>
-                <div class="mb-3 col-md-4">
+                <%--<div class="mb-3 col-md-4">
                     <label for="variant" class="form-label">Variant</label>
                     <input type="text" class="form-control" id="variant" name="variant" required>
+                </div>--%>
+                <div class="mb-3 col-md-4">
+                    <label for="variant" class="form-label">Variant</label>
+                    <select class="form-select" id="variant" name="variant" required>
+                        <option value="" disabled selected></option>
+                        <option value="Standard">Standard</option>
+                        <option value="luxury">luxury</option>
+                        <option value="Classic">Classic</option>
+                        <option value="Sport">Sport</option>
+                    </select>
                 </div>
                 <div class="mb-3 col-md-4">
                     <label for="year" class="form-label">Year</label>
@@ -103,7 +112,13 @@
                 </div>
                 <div class="mb-3 col-md-4">
                     <label for="fuelType" class="form-label">Fuel Type</label>
-                    <input type="text" class="form-control" id="fuelType" name="fuelType" required>
+                    <select class="form-select" id="fuelType" name="fuelType" required>
+                        <option value="" disabled selected></option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                    </select>
                 </div>
                 <div class="mb-3 col-md-4">
                     <label for="seatingCapacity" class="form-label">Seating Capacity</label>
@@ -115,8 +130,15 @@
                 </div>
                 <div class="mb-3 col-md-4">
                     <label for="status" class="form-label">Status</label>
-                    <input type="text" class="form-control" id="status" name="status" required>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="" disabled selected></option>
+                        <option value="Available">Available</option>
+                        <option value="Under Maintenance">Under Maintenance</option>
+                        <option value="Reserved">Reserved</option>
+                    </select>
                 </div>
+
+
             </section>
 
             <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
@@ -131,53 +153,46 @@
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Variant</th>
-                <th>year</th>
-                <th>fuelType</th>
+                <th>Year</th>
+                <th>Fuel Type</th>
                 <th>Seating Capacity</th>
                 <th>Rent per Day</th>
                 <th>Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <%
-                List<Vehicle> vehicles = (List<Vehicle>) request.getAttribute("vehicles");
-                if (vehicles != null) {
-                    for (Vehicle vehicle : vehicles) {
-            %>
-            <tr class="align-middle"
-                data-id="<%= vehicle.getId() %>"
-                data-brand="<%= vehicle.getBrand() %>"
-                data-model="<%= vehicle.getModel() %>"
-                data-variant="<%= vehicle.getVariant() %>"
-                data-year="<%= vehicle.getYear() %>"
-                data-fuelType="<%= vehicle.getFuelType() %>"
-                data-seatingCapacity="<%= vehicle.getSeatingCapacity() %>"
-                data-rentPerDay="<%= vehicle.getRentPerDay() %>"
-                data-status="<%= vehicle.getStatus() %>">
-                <td><%= vehicle.getId() %></td>
-                <td><%= vehicle.getBrand() %></td>
-                <td><%= vehicle.getModel() %></td>
-                <td><%= vehicle.getVariant() %></td>
-                <td><%= vehicle.getYear() %></td>
-                <td><%= vehicle.getFuelType() %></td>
-                <td><%= vehicle.getSeatingCapacity() %></td>
-                <td><%= vehicle.getRentPerDay() %></td>
-                <td><%= vehicle.getStatus() %></td>
-
-                <td>
-                    <form action="vehicle" method="post" style="display:inline;">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="id" value="<%= vehicle.getId() %>">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            <%
-                    }
-                }
-            %>
+            <c:forEach var="vehicle" items="${vehicles}">
+                <tr class="align-middle"
+                    data-id="${vehicle.id}"
+                    data-brand="${vehicle.brand}"
+                    data-model="${vehicle.model}"
+                    data-variant="${vehicle.variant}"
+                    data-year="${vehicle.year}"
+                    data-fuelType="${vehicle.fuelType}"
+                    data-seatingCapacity="${vehicle.seatingCapacity}"
+                    data-rentPerDay="${vehicle.rentPerDay}"
+                    data-status="${vehicle.status}">
+                    <td>${vehicle.id}</td>
+                    <td>${vehicle.brand}</td>
+                    <td>${vehicle.model}</td>
+                    <td>${vehicle.variant}</td>
+                    <td>${vehicle.year}</td>
+                    <td>${vehicle.fuelType}</td>
+                    <td>${vehicle.seatingCapacity}</td>
+                    <td>${vehicle.rentPerDay}</td>
+                    <td>${vehicle.status}</td>
+                    <td>
+                        <form action="vehicle" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="id" value="${vehicle.id}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
     </div>
