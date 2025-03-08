@@ -6,8 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-<%@ page import="com.icbt.car_rental.model.Customer" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Customer Management</title>
@@ -127,42 +126,33 @@
             </tr>
             </thead>
             <tbody>
-            <%
-                List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-                if (customers != null) {
-                    for (Customer customer : customers) {
-            %>
-            <tr class="align-middle" data-id="<%= customer.getId() %>"
-                data-firstname="<%= customer.getFirstName() %>"
-                data-lastname="<%= customer.getLastName() %>"
-                data-email="<%= customer.getEmail() %>"
-                data-password="<%= customer.getPassword() %>"
-                data-address="<%= customer.getAddress() %>"
-                data-contactno="<%= customer.getContactNo() %>">
-                <td><%= customer.getId() %>
-                </td>
-                <td><%= customer.getFirstName() %> <%= customer.getLastName() %>
-                </td>
-                <td><%= customer.getEmail() %>
-                </td>
-                <td><%= customer.getContactNo() %>
-                </td>
-                <td>
-                    <form action="customer" method="post" style="display:inline;">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="id" value="<%= customer.getId() %>">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            <%
-                    }
-                }
-            %>
+            <c:forEach var="customer" items="${customers}">
+                <tr class="align-middle"
+                    data-id="${customer.id}"
+                    data-firstname="${customer.firstName}"
+                    data-lastname="${customer.lastName}"
+                    data-email="${customer.email}"
+                    data-password="${customer.password}"
+                    data-address="${customer.address}"
+                    data-contactno="${customer.contactNo}">
+                    <td>${customer.id}</td>
+                    <td>${customer.firstName} ${customer.lastName}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.contactNo}</td>
+                    <td>
+                        <form action="customer" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="id" value="${customer.id}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
             </tbody>
         </table>
+
     </div>
 </div>
 

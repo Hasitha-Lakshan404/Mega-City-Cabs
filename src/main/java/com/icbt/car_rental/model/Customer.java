@@ -141,6 +141,11 @@ public class Customer {
             return this;
         }
 
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
         public Customer build() {
             return new Customer(this);
         }

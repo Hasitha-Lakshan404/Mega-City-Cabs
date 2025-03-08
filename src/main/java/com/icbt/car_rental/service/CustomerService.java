@@ -12,4 +12,7 @@ public interface CustomerService {
     void updateCustomer(Customer updateCustomer) throws SQLException;
 
     void deleteCustomer(int customerId);
+
+    boolean validate(Customer customer)throws SQLException;
+
 }
