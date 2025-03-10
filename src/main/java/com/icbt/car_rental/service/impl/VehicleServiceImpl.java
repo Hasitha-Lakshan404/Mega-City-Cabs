@@ -11,25 +11,30 @@ import java.util.List;
 
 public class VehicleServiceImpl implements VehicleService {
 
-    private final VehicleDao customerDao = new VehicleDaoImpl();
+    private final VehicleDao vehicleDao = new VehicleDaoImpl();
 
     @Override
     public void addVehicle(Vehicle customer) throws SQLException {
-        customerDao.addVehicle(customer);
+        vehicleDao.addVehicle(customer);
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() throws SQLException {
-        return customerDao.getAllVehicles();
+    public List<Vehicle> getAllVehicles(boolean isOnlyAvailableVehicles) throws SQLException {
+        return vehicleDao.getAllVehicles(isOnlyAvailableVehicles);
     }
 
     @Override
     public void updateVehicle(Vehicle customer) throws SQLException {
-        customerDao.updateVehicle(customer);
+        vehicleDao.updateVehicle(customer);
     }
 
     @Override
     public void deleteVehicle(int customerId) {
-        customerDao.deleteVehicle(customerId);
+        vehicleDao.deleteVehicle(customerId);
+    }
+
+    @Override
+    public Vehicle getVehicleById(long vehicleId) throws SQLException {
+        return vehicleDao.getVehicleById(vehicleId);
     }
 }

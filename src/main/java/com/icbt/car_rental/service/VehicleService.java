@@ -8,9 +8,11 @@ import java.util.List;
 public interface VehicleService {
     void addVehicle(Vehicle vehicle) throws SQLException;
 
-    List<Vehicle> getAllVehicles() throws SQLException;
+    List<Vehicle> getAllVehicles(boolean isOnlyAvailableVehicles) throws SQLException;
 
     void updateVehicle(Vehicle updateVehicle) throws SQLException;
 
     void deleteVehicle(int vehicleId);
+
+    Vehicle getVehicleById(long vehicleId) throws SQLException;
 }

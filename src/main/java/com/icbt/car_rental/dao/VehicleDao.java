@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface VehicleDao {
     void addVehicle(Vehicle vehicle) throws SQLException;
-    List<Vehicle> getAllVehicles() throws SQLException;
+    List<Vehicle> getAllVehicles(boolean isOnlyAvailableVehicles) throws SQLException;
 
     void updateVehicle(Vehicle vehicle) throws SQLException;
 
     void deleteVehicle(int vehicleId);
+
+    public Vehicle getVehicleById(long vehicleId) throws SQLException;
 }

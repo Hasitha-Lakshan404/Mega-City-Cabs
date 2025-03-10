@@ -23,7 +23,6 @@ public class SignUpServlet extends HttpServlet {
             String password = request.getParameter("password");
             String confirmPassword = request.getParameter("confirmPassword");
 
-            // Check if passwords match
             if (password.equals(confirmPassword)) {
 
                 Customer newCustomer = new Customer();

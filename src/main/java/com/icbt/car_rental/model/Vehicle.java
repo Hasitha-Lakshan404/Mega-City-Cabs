@@ -10,10 +10,14 @@ public class Vehicle {
     private int year;
     private String fuelType;
     private int seatingCapacity;
-    private BigDecimal rentPerDay;
+    private BigDecimal rentPerKm;
+    private double currentMeeterReading;
     private String status;
 
-    public Vehicle(long id, String brand, String model, String variant, int year, String fuelType, int seatingCapacity, BigDecimal rentPerDay, String status) {
+    public Vehicle() {
+    }
+
+    public Vehicle(long id, String brand, String model, String variant, int year, String fuelType, int seatingCapacity, BigDecimal rentPerKm, double currentMeeterReading, String status) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -21,11 +25,17 @@ public class Vehicle {
         this.year = year;
         this.fuelType = fuelType;
         this.seatingCapacity = seatingCapacity;
-        this.rentPerDay = rentPerDay;
+        this.rentPerKm = rentPerKm;
+        this.currentMeeterReading = currentMeeterReading;
         this.status = status;
     }
 
-    public Vehicle() {
+    public double getCurrentMeeterReading() {
+        return currentMeeterReading;
+    }
+
+    public void setCurrentMeeterReading(double currentMeeterReading) {
+        this.currentMeeterReading = currentMeeterReading;
     }
 
     public long getId() {
@@ -84,12 +94,12 @@ public class Vehicle {
         this.seatingCapacity = seatingCapacity;
     }
 
-    public BigDecimal getRentPerDay() {
-        return rentPerDay;
+    public BigDecimal getRentPerKm() {
+        return rentPerKm;
     }
 
-    public void setRentPerDay(BigDecimal rentPerDay) {
-        this.rentPerDay = rentPerDay;
+    public void setRentPerKm(BigDecimal rentPerKm) {
+        this.rentPerKm = rentPerKm;
     }
 
     public String getStatus() {

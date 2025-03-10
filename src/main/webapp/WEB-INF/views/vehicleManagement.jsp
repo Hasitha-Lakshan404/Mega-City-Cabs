@@ -92,10 +92,7 @@
                     <label for="model" class="form-label">Model</label>
                     <input type="text" class="form-control" id="model" name="model" required>
                 </div>
-                <%--<div class="mb-3 col-md-4">
-                    <label for="variant" class="form-label">Variant</label>
-                    <input type="text" class="form-control" id="variant" name="variant" required>
-                </div>--%>
+
                 <div class="mb-3 col-md-4">
                     <label for="variant" class="form-label">Variant</label>
                     <select class="form-select" id="variant" name="variant" required>
@@ -125,8 +122,12 @@
                     <input type="text" class="form-control" id="seatingCapacity" name="seatingCapacity" required>
                 </div>
                 <div class="mb-3 col-md-4">
-                    <label for="rentPerDay" class="form-label">Rent Per Day</label>
-                    <input type="text" class="form-control" id="rentPerDay" name="rentPerDay" required>
+                    <label for="rentPerKm" class="form-label">Rent Per Km</label>
+                    <input type="text" class="form-control" id="rentPerKm" name="rentPerKm" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="currentMeeterReading" class="form-label">Current Meeter Reading</label>
+                    <input type="text" class="form-control" id="currentMeeterReading" name="currentMeeterReading" required>
                 </div>
                 <div class="mb-3 col-md-4">
                     <label for="status" class="form-label">Status</label>
@@ -156,7 +157,8 @@
                 <th>Year</th>
                 <th>Fuel Type</th>
                 <th>Seating Capacity</th>
-                <th>Rent per Day</th>
+                <th>Rent per Km</th>
+                <th>Meeter Reading</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -171,7 +173,8 @@
                     data-year="${vehicle.year}"
                     data-fuelType="${vehicle.fuelType}"
                     data-seatingCapacity="${vehicle.seatingCapacity}"
-                    data-rentPerDay="${vehicle.rentPerDay}"
+                    data-rentPerKm="${vehicle.rentPerKm}"
+                    data-currentMeeterReading="${vehicle.currentMeeterReading}"
                     data-status="${vehicle.status}">
                     <td>${vehicle.id}</td>
                     <td>${vehicle.brand}</td>
@@ -180,7 +183,8 @@
                     <td>${vehicle.year}</td>
                     <td>${vehicle.fuelType}</td>
                     <td>${vehicle.seatingCapacity}</td>
-                    <td>${vehicle.rentPerDay}</td>
+                    <td>${vehicle.rentPerKm}</td>
+                    <td>${vehicle.currentMeeterReading}</td>
                     <td>${vehicle.status}</td>
                     <td>
                         <form action="vehicle" method="post" style="display:inline;">
@@ -211,7 +215,8 @@
                 $("#year").val(row.data("year"));
                 $("#fuelType").val(row.data("fueltype"));
                 $("#seatingCapacity").val(row.data("seatingcapacity"));
-                $("#rentPerDay").val(row.data("rentperday"));
+                $("#rentPerKm").val(row.data("rentperkm"));
+                $("#currentMeeterReading").val(row.data("currentmeeterreading"));
                 $("#status").val(row.data("status"));
 
                 // Set to update mode
