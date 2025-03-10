@@ -128,6 +128,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Nic</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -140,11 +141,13 @@
                     data-email="${customer.email}"
                     data-password="${customer.password}"
                     data-address="${customer.address}"
-                    data-contactno="${customer.contactNo}">
+                    data-contactno="${customer.contactNo}"
+                    data-nic="${customer.nic}">
                     <td>${customer.id}</td>
                     <td>${customer.firstName} ${customer.lastName}</td>
                     <td>${customer.email}</td>
                     <td>${customer.contactNo}</td>
+                    <td>${customer.nic}</td>
                     <td>
                         <form action="customer" method="post" style="display:inline;">
                             <input type="hidden" name="action" value="delete">
@@ -175,6 +178,7 @@
                 $("#password").val(row.data("password"));
                 $("#address").val(row.data("address"));
                 $("#contactNo").val(row.data("contactno"));
+                $("#nic").val(row.data("nic"));
 
                 // Set to update mode
                 $("#action").val("update");

@@ -6,6 +6,10 @@ import com.icbt.car_rental.dao.impl.AdminAuthDaoImpl;
 import com.icbt.car_rental.dao.impl.CustomerDaoImpl;
 import com.icbt.car_rental.model.AdminAuth;
 import com.icbt.car_rental.model.Customer;
+import com.icbt.car_rental.service.AdminAuthService;
+import com.icbt.car_rental.service.CustomerService;
+import com.icbt.car_rental.service.impl.AdminAuthServiceImpl;
+import com.icbt.car_rental.service.impl.CustomerServiceImpl;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,16 +17,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-//@WebServlet("/login")
 @WebServlet(name = "loginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
 
-    private final AdminAuthDao adminAuthDao = new AdminAuthDaoImpl();
-    private final CustomerDao customerDao = new CustomerDaoImpl();
+    private final CustomerService customerService = new CustomerServiceImpl();
+    private final AdminAuthService adminAuthService = new AdminAuthServiceImpl();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -31,8 +33,6 @@ public class LoginServlet extends HttpServlet {
 
         try {
             String adminLogin = request.getParameter("adminLogin");
-            HttpSession session = request.getSession();
-            session.setAttribute("user", email);
 
             if (adminLogin != null && adminLogin.equals("on")) {
 
@@ -41,8 +41,7 @@ public class LoginServlet extends HttpServlet {
                         .password(password)
                         .build();
 
-                if (adminAuthDao.validate(adminAuth)) {
-                    session.setAttribute("isAdmin", true);
+                if (adminAuthService.validate(adminAuth)) {
                     response.sendRedirect("vehicle");
                 }else{
                     invalidCredentialAndForwardToLoginPage(request, response);
@@ -54,9 +53,10 @@ public class LoginServlet extends HttpServlet {
                         .password(password)
                         .build();
 
-                if (customerDao.validate(customer)) {
-                    session.setAttribute("isAdmin", false);
-                    response.sendRedirect("customer");
+                Customer customerResponse = customerService.checkValidationAndGetCustomer(customer);
+                if (customerResponse != null) {
+                    response.sendRedirect("booking?customerId=" + customerResponse.getId());
+
                 }else{
                     invalidCredentialAndForwardToLoginPage(request, response);
                 }

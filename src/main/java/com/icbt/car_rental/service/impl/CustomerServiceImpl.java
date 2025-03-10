@@ -33,7 +33,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean validate(Customer customer) throws SQLException {
-       return customerDao.validate(customer);
+    public Customer checkValidationAndGetCustomer(Customer customer) throws SQLException {
+       return customerDao.checkValidationAndGetCustomer(customer);
     }
 }

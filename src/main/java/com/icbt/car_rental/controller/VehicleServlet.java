@@ -22,7 +22,7 @@ public class VehicleServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            List<Vehicle> vehicles = vehicleService.getAllVehicles();
+            List<Vehicle> vehicles = vehicleService.getAllVehicles(false);
             request.setAttribute("vehicles", vehicles);
             request.getRequestDispatcher("/WEB-INF/views/vehicleManagement.jsp").forward(request, response);
         } catch (SQLException e) {
@@ -45,7 +45,8 @@ public class VehicleServlet extends HttpServlet {
                     newVehicle.setYear(Integer.parseInt(request.getParameter("year")));
                     newVehicle.setFuelType(request.getParameter("fuelType"));
                     newVehicle.setSeatingCapacity(Integer.parseInt(request.getParameter("seatingCapacity")));
-                    newVehicle.setRentPerDay(new BigDecimal(request.getParameter("rentPerDay")));
+                    newVehicle.setRentPerKm(new BigDecimal(request.getParameter("rentPerKm")));
+                    newVehicle.setCurrentMeeterReading(Double.parseDouble(request.getParameter("currentMeeterReading")));
                     newVehicle.setStatus(request.getParameter("status"));
 
                     vehicleService.addVehicle(newVehicle);
@@ -61,8 +62,9 @@ public class VehicleServlet extends HttpServlet {
                     updateVehicle.setYear(Integer.parseInt(request.getParameter("year")));
                     updateVehicle.setFuelType(request.getParameter("fuelType"));
                     updateVehicle.setSeatingCapacity(Integer.parseInt(request.getParameter("seatingCapacity")));
-                    updateVehicle.setRentPerDay(new BigDecimal(request.getParameter("rentPerDay")));
+                    updateVehicle.setRentPerKm(new BigDecimal(request.getParameter("rentPerKm")));
                     updateVehicle.setStatus(request.getParameter("status"));
+                    updateVehicle.setCurrentMeeterReading(Double.parseDouble(request.getParameter("currentMeeterReading")));
                     vehicleService.updateVehicle(updateVehicle);
                     break;
 
