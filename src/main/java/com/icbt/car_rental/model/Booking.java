@@ -7,7 +7,7 @@ public class Booking {
     private long bookingId;
     private long customerId;
     private long paymentId;
-    private long driverId;
+    private long driverId; //TODO-remove driver id
     private Date bookingDate;
     private Date pickupDate;
     private Date returnDate;

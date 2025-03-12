@@ -67,7 +67,7 @@
             <a class="nav-link" href="vehicle">Vehicle Management</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="carInventoryManagement.jsp">Car Inventory Management</a>
+            <a class="nav-link" href="adminBooking">Booking Management</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="orderManagement.jsp">Order Management</a>
