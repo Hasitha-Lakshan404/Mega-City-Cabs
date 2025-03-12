@@ -1,9 +1,12 @@
 package com.icbt.car_rental.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icbt.car_rental.dao.BookingDao;
 import com.icbt.car_rental.dao.impl.BookingDaoImpl;
 import com.icbt.car_rental.model.*;
 import com.icbt.car_rental.model.dto.BookingDTO;
+import com.icbt.car_rental.model.dto.GetAllBookingDTO;
 import com.icbt.car_rental.service.*;
 
 import java.sql.SQLException;
@@ -89,6 +92,15 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getAllBookings() throws SQLException {
         return bookingDao.getAllBookings();
+    }
+
+    @Override
+    public List<GetAllBookingDTO> getAllBookingsWithDetails() throws SQLException, JsonProcessingException {
+        List<GetAllBookingDTO> allBookingsWithDetails = bookingDao.getAllBookingsWithDetails();
+        for (GetAllBookingDTO getAllBookingDTO : allBookingsWithDetails) {
+            getAllBookingDTO.setBookingDetailsJson(new ObjectMapper().writeValueAsString(getAllBookingDTO));
+        }
+        return allBookingsWithDetails;
     }
 
     @Override
