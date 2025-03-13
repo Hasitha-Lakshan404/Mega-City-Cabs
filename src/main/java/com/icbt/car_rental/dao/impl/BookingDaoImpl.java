@@ -3,6 +3,7 @@ package com.icbt.car_rental.dao.impl;
 import com.icbt.car_rental.dao.BookingDao;
 import com.icbt.car_rental.model.Booking;
 import com.icbt.car_rental.model.BookingDetails;
+import com.icbt.car_rental.model.dto.BookingDTO;
 import com.icbt.car_rental.model.dto.GetAllBookingDTO;
 import com.icbt.car_rental.util.DBConnection;
 
@@ -136,7 +137,7 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public void updateBooking(Booking booking) throws SQLException {
+    public void updateBooking(BookingDTO booking) throws SQLException {
         String sql = "UPDATE Booking SET customerId=?, paymentId=?, bookingDate=?, pickupDate=?, returnDate=?, status=? WHERE bookingId=?";
         try (Connection conn = DBConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

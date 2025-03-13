@@ -16,7 +16,7 @@ public interface BookingDao {
 
     List<Booking> getAllBookings() throws SQLException;
 
-    void updateBooking(Booking booking) throws SQLException;
+    void updateBooking(BookingDTO booking) throws SQLException;
 
     void deleteBooking(int bookingId) throws SQLException;
 }

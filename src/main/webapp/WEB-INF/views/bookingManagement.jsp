@@ -5,7 +5,7 @@
   Time: 01:00 AM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.icbt.car_rental.model.Booking" %>
@@ -370,6 +370,804 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html>--%>
+
+
+
+<%--------------------------------------------------------------------------------%>
+
+
+
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="java.time.LocalDate" %>
+<html>
+<head>
+    <title>Booking Management (Admin)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(78,77,91,1) 8%, rgba(21,21,55,1) 100%);
+            color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar .nav-link {
+            color: #fff;
+            font-weight: 500;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s ease, padding 0.3s ease;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 20px;
+        }
+        .booking-form {
+            margin-top: 20px;
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .booking-details-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4>Car Reservation (Admin)</h4>
+    <hr>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="customer">Customer Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="vehicle">Vehicle Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="adminBooking">Booking Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="orderManagement.jsp">Order Management</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="container">
+        <h1>Booking Management (Admin)</h1>
+
+        <!-- Booking Form -->
+        <form action="adminBooking" method="post" class="booking-form" id="bookingForm">
+            <!-- Hidden fields for update mode -->
+            <input type="hidden" name="action" id="action" value="create">
+            <input type="hidden" name="bookingId" id="bookingId" value="">
+            <input type="hidden" name="paymentId" id="paymentId" value="">
+
+            <!-- Booking Header Details -->
+            <div class="mb-3">
+                <label for="customerId" class="form-label">Customer</label>
+                <select class="form-control" id="customerId" name="customerId" required>
+                    <option value="">-- Select Customer --</option>
+                    <c:forEach var="customer" items="${customers}">
+                        <option value="${customer.id}">${customer.firstName} ${customer.lastName}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="row g-3">
+                <!-- Auto-set booking date (displayed but disabled) -->
+                <div class="mb-3 col-md-4">
+                    <label for="bookingDateDisplay" class="form-label">Booking Date</label>
+                    <input type="date" class="form-control" id="bookingDateDisplay" disabled>
+                    <input type="hidden" name="bookingDate" id="bookingDate">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="pickupDate" class="form-label">Pickup Date</label>
+                    <input type="date" class="form-control" id="pickupDate" name="pickupDate" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="returnDate" class="form-label">Return Date</label>
+                    <input type="date" class="form-control" id="returnDate" name="returnDate" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Booking Status</label>
+                <select class="form-select" id="status" name="status" required>
+                    <option value="PENDING" selected>PENDING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+            </div>
+
+            <!-- Payment Details -->
+            <h4>Payment Details</h4>
+            <div class="row g-3">
+                <div class="mb-3 col-md-4">
+                    <label for="advanceAmount" class="form-label">Advance Amount</label>
+                    <input type="number" step="0.01" class="form-control" id="advanceAmount" name="advanceAmount" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="totalAmount" class="form-label">Total Amount</label>
+                    <input type="number" step="0.01" class="form-control" id="totalAmount" name="totalAmount" disabled>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="paymentDate" class="form-label">Payment Date</label>
+                    <input type="date" class="form-control" id="paymentDate" name="paymentDate" disabled>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="paymentStatus" class="form-label">Payment Status</label>
+                <select class="form-select" id="paymentStatus" name="paymentStatus" required>
+                    <option value="ADVANCE_PAID">ADVANCE_PAID</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="CANCELED">CANCELED</option>
+                    <option value="COMPLETE">COMPLETE</option>
+                </select>
+            </div>
+
+            <!-- Booking Details Section -->
+            <h4>Booking Details</h4>
+            <div id="bookingDetailsContainer">
+                <!-- One default booking detail section -->
+                <div class="booking-details-section">
+                    <!-- Hidden field for booking detail id (used in update) -->
+                    <input type="hidden" name="bookingDetailIds" class="bookingDetailId" value="">
+                    <div class="row g-3">
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Vehicle</label>
+                            <select class="form-control vehicleSelect" name="vehicleIds" required>
+                                <option value="">-- None --</option>
+                                <c:forEach var="vehicle" items="${adminVehicleList}">
+                                    <option value="${vehicle.id}" data-rent="${vehicle.rentPerKm}">${vehicle.brand} ${vehicle.model} - Rent: LKR ${vehicle.rentPerKm}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Driver (Optional)</label>
+                            <select class="form-control" name="driverIds">
+                                <option value="">-- None --</option>
+                                <c:forEach var="driver" items="${adminDriverList}">
+                                    <option value="${driver.id}">${driver.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Before Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control beforeMeter" name="beforeMeter" readonly>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">After Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control afterMeter" name="afterMeter" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hidden template for new booking details sections -->
+            <div id="bookingDetailsTemplate" style="display: none;">
+                <div class="booking-details-section">
+                    <input type="hidden" name="bookingDetailIds" class="bookingDetailId" value="">
+                    <div class="row g-3">
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Vehicle</label>
+                            <select class="form-control vehicleSelect" name="vehicleIds" required>
+                                <option value="">-- None --</option>
+                                <c:forEach var="vehicle" items="${adminVehicleList}">
+                                    <option value="${vehicle.id}" data-rent="${vehicle.rentPerKm}">${vehicle.brand} ${vehicle.model} - Rent: LKR ${vehicle.rentPerKm}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Driver (Optional)</label>
+                            <select class="form-control" name="driverIds">
+                                <option value="">-- None --</option>
+                                <c:forEach var="driver" items="${adminDriverList}">
+                                    <option value="${driver.id}">${driver.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Before Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control beforeMeter" name="beforeMeter" readonly>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">After Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control afterMeter" name="afterMeter" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <button type="button" class="btn btn-secondary" id="addDetailBtn">Add Another Booking Detail</button>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Save Booking</button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+        </form>
+
+        <!-- Booking Table -->
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Booking Date</th>
+                <th>Pickup Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Advance Amount</th>
+                <th>Payment Date</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="booking" items="${bookings}">
+                <tr class="align-middle"
+                    data-bookingid="${booking.bookingId}"
+                    data-customerid="${booking.customerId}"
+                    data-bookingdate="${booking.bookingDate}"
+                    data-pickupdate="${booking.pickupDate}"
+                    data-returndate="${booking.returnDate}"
+                    data-status="${booking.status}"
+                    data-paymentid="${booking.paymentId}"
+                    data-advanceamount="${booking.advanceAmount}"
+                    data-totalamount="${booking.totalAmount}"
+                    data-paymentdate="${booking.paymentDate}"
+                    data-paymentstatus="${booking.paymentStatus}"
+                    data-bookingdetailsjson='<c:out value="${booking.bookingDetailsJson}" escapeXml="true"/>'>
+                    <td>${booking.bookingId}</td>
+                    <td>${booking.customerFirstName} ${booking.customerLastName}</td>
+                    <td>${booking.bookingDate}</td>
+                    <td>${booking.pickupDate}</td>
+                    <td>${booking.returnDate}</td>
+                    <td>${booking.status}</td>
+                    <td>${booking.advanceAmount}</td>
+                    <td>${booking.paymentDate}</td>
+                    <td>${booking.paymentStatus}</td>
+                    <td>
+                        <form action="adminBooking" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="bookingId" value="${booking.bookingId}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Set booking date to today (both display and hidden field)
+        var today = new Date().toISOString().substr(0, 10);
+        $("#bookingDateDisplay").val(today);
+        $("#bookingDate").val(today);
+
+        // Recalculate total payment based on each booking detail’s after-meter value
+        function recalcTotals() {
+            var total = 0;
+            $("#bookingDetailsContainer .booking-details-section").each(function(){
+                var $section = $(this);
+                var rent = parseFloat($section.find(".vehicleSelect option:selected").data("rent") || 0);
+                var before = parseFloat($section.find(".beforeMeter").val() || 0);
+                var after = parseFloat($section.find(".afterMeter").val() || 0);
+                var diff = after - before;
+                if(diff < 0) diff = 0;
+                total += diff * rent;
+            });
+            $("#totalAmount").val(total.toFixed(2));
+        }
+
+        // Bind change event for afterMeter fields
+        $("#bookingDetailsContainer").on("input", ".afterMeter", function(){
+            recalcTotals();
+        });
+
+        // When a vehicle is selected, auto-set the before meter reading (example: set to 0 or fetched via AJAX)
+        $("#bookingDetailsContainer").on("change", ".vehicleSelect", function(){
+            var $section = $(this).closest(".booking-details-section");
+            $section.find(".beforeMeter").val(0);
+            recalcTotals();
+        });
+
+        // Populate form for update when clicking a booking row
+        $("table tbody").on("click", "tr", function(e) {
+            if(!$(e.target).closest("form").length) {
+                var row = $(this);
+                $("#bookingId").val(row.data("bookingid"));
+                $("#customerId").val(row.data("customerid"));
+                $("#bookingDate").val(row.data("bookingdate"));
+                $("#pickupDate").val(row.data("pickupdate"));
+                $("#returnDate").val(row.data("returndate"));
+                $("#status").val(row.data("status"));
+                $("#paymentId").val(row.data("paymentid"));
+                $("#advanceAmount").val(row.data("advanceamount"));
+                $("#totalAmount").val(row.data("totalamount"));
+                $("#paymentDate").val(row.data("paymentdate"));
+                $("#paymentStatus").val(row.data("paymentstatus"));
+                $("#action").val("update");
+                $("#submitBtn").text("Update Booking");
+
+                // Clear booking details container and load JSON details
+                $("#bookingDetailsContainer").empty();
+                var bookingDetailsData = row.data("bookingdetailsjson");
+                if (bookingDetailsData && Array.isArray(bookingDetailsData.bookingDetails)) {
+                    bookingDetailsData.bookingDetails.forEach(function(detail) {
+                        var $section = $("#bookingDetailsTemplate .booking-details-section").clone();
+                        $section.find(".bookingDetailId").val(detail.bookingDetailId);
+                        $section.find(".vehicleSelect").val(detail.vehicleId);
+                        $section.find("select[name='driverIds']").val(detail.driverId);
+                        $section.find(".beforeMeter").val(detail.beforeMeeterReading);
+                        $section.find(".afterMeter").val(detail.afterMeeterReading);
+                        $("#bookingDetailsContainer").append($section);
+                    });
+                } else {
+                    var $emptySection = $("#bookingDetailsTemplate .booking-details-section").clone();
+                    $("#bookingDetailsContainer").append($emptySection);
+                }
+                recalcTotals();
+            }
+        });
+
+        // Reset form
+        $("#resetBtn").click(function(){
+            $("#bookingForm")[0].reset();
+            $("#bookingId, #paymentId, #action").val("");
+            $("#submitBtn").text("Save Booking");
+            $("#bookingDetailsContainer").empty();
+            var $emptySection = $("#bookingDetailsTemplate .booking-details-section").clone();
+            $("#bookingDetailsContainer").append($emptySection);
+            recalcTotals();
+        });
+
+        // Add new booking detail section
+        $("#addDetailBtn").click(function(){
+            var $newSection = $("#bookingDetailsTemplate .booking-details-section").clone();
+            $("#bookingDetailsContainer").append($newSection);
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>--%>
+
+
+
+
+<%-------------------------------------------------------------------------------------------%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<html>
+<head>
+    <title>Booking Management (Admin)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 220px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(78,77,91,1) 8%, rgba(21,21,55,1) 100%);
+            color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar .nav-link {
+            color: #fff;
+            font-weight: 500;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            transition: background-color 0.3s ease, padding 0.3s ease;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 20px;
+        }
+        .booking-form {
+            margin-top: 20px;
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .booking-details-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4>Car Reservation (Admin)</h4>
+    <hr>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="customer">Customer Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="vehicle">Vehicle Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="adminBooking">Booking Management</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="orderManagement.jsp">Order Management</a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="container">
+        <h1>Booking Management (Admin)</h1>
+
+        <!-- Booking Form -->
+        <form action="adminBooking" method="post" class="booking-form" id="bookingForm">
+            <!-- Hidden fields for update mode -->
+            <input type="hidden" name="action" id="action" value="create">
+            <input type="hidden" name="bookingId" id="bookingId" value="">
+            <input type="hidden" name="paymentId" id="paymentId" value="">
+
+            <!-- Booking Header Details -->
+            <div class="mb-3">
+                <label for="customerId" class="form-label">Customer</label>
+                <select class="form-control" id="customerId" name="customerId" required>
+                    <option value="">-- Select Customer --</option>
+                    <c:forEach var="customer" items="${customers}">
+                        <option value="${customer.id}">${customer.firstName} ${customer.lastName}</option>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="row g-3">
+                <!-- Auto-set booking date (displayed but disabled) -->
+                <div class="mb-3 col-md-4">
+                    <label for="bookingDateDisplay" class="form-label">Booking Date</label>
+                    <input type="date" class="form-control" id="bookingDateDisplay" disabled>
+                    <input type="hidden" name="bookingDate" id="bookingDate">
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="pickupDate" class="form-label">Pickup Date</label>
+                    <input type="date" class="form-control" id="pickupDate" name="pickupDate" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="returnDate" class="form-label">Return Date</label>
+                    <input type="date" class="form-control" id="returnDate" name="returnDate" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Booking Status</label>
+                <select class="form-select" id="status" name="status" required>
+                    <option value="PENDING" selected>PENDING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                </select>
+            </div>
+
+            <!-- Payment Details -->
+            <h4>Payment Details</h4>
+            <div class="row g-3">
+                <div class="mb-3 col-md-4">
+                    <label for="advanceAmount" class="form-label">Advance Amount</label>
+                    <input type="number" step="0.01" class="form-control" id="advanceAmount" name="advanceAmount" required>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="totalAmount" class="form-label">Total Amount</label>
+                    <input type="number" step="0.01" class="form-control" id="totalAmount" name="totalAmount" disabled>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label for="paymentDate" class="form-label">Payment Date</label>
+                    <input type="date" class="form-control" id="paymentDate" name="paymentDate" disabled>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="paymentStatus" class="form-label">Payment Status</label>
+                <select class="form-select" id="paymentStatus" name="paymentStatus" required>
+                    <option value="ADVANCE_PAID">ADVANCE_PAID</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="CANCELED">CANCELED</option>
+                    <option value="COMPLETE">COMPLETE</option>
+                </select>
+            </div>
+
+            <!-- Booking Details Section -->
+            <h4>Booking Details</h4>
+            <div id="bookingDetailsContainer">
+                <!-- One default booking detail section -->
+                <div class="booking-details-section">
+                    <!-- Hidden field for bookingDetailId (for update) -->
+                    <input type="hidden" class="bookingDetailId" value="">
+                    <div class="row g-3">
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Vehicle</label>
+                            <select class="form-control vehicleSelect" name="vehicleIds" required>
+                                <option value="">-- None --</option>
+                                <c:forEach var="vehicle" items="${adminVehicleList}">
+                                    <option value="${vehicle.id}" data-rent="${vehicle.rentPerKm}">
+                                            ${vehicle.brand} ${vehicle.model} - Rent: LKR ${vehicle.rentPerKm}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Driver (Optional)</label>
+                            <select class="form-control" name="driverIds">
+                                <option value="">-- None --</option>
+                                <c:forEach var="driver" items="${adminDriverList}">
+                                    <option value="${driver.id}">${driver.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Before Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control beforeMeter" name="beforeMeter" readonly>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">After Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control afterMeter" name="afterMeter" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hidden template for new booking details sections -->
+            <div id="bookingDetailsTemplate" style="display: none;">
+                <div class="booking-details-section">
+                    <input type="hidden" class="bookingDetailId" value="">
+                    <div class="row g-3">
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Vehicle</label>
+                            <select class="form-control vehicleSelect" name="vehicleIds" required>
+                                <option value="">-- None --</option>
+                                <c:forEach var="vehicle" items="${adminVehicleList}">
+                                    <option value="${vehicle.id}" data-rent="${vehicle.rentPerKm}">
+                                            ${vehicle.brand} ${vehicle.model} - Rent: LKR ${vehicle.rentPerKm}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Select Driver (Optional)</label>
+                            <select class="form-control" name="driverIds">
+                                <option value="">-- None --</option>
+                                <c:forEach var="driver" items="${adminDriverList}">
+                                    <option value="${driver.id}">${driver.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">Before Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control beforeMeter" name="beforeMeter" readonly>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label class="form-label">After Meter Reading</label>
+                            <input type="number" step="0.01" class="form-control afterMeter" name="afterMeter" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hidden field to hold JSON data for all booking details -->
+            <input type="hidden" name="bookingDetailsJson" id="bookingDetailsJson">
+
+            <div class="mb-3">
+                <button type="button" class="btn btn-secondary" id="addDetailBtn">Add Another Booking Detail</button>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Save Booking</button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
+        </form>
+
+        <!-- Booking Table -->
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Booking Date</th>
+                <th>Pickup Date</th>
+                <th>Return Date</th>
+                <th>Status</th>
+                <th>Advance Amount</th>
+                <th>Payment Date</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="booking" items="${bookings}">
+                <tr class="align-middle"
+                    data-bookingid="${booking.bookingId}"
+                    data-customerid="${booking.customerId}"
+                    data-bookingdate="${booking.bookingDate}"
+                    data-pickupdate="${booking.pickupDate}"
+                    data-returndate="${booking.returnDate}"
+                    data-status="${booking.status}"
+                    data-paymentid="${booking.paymentId}"
+                    data-advanceamount="${booking.advanceAmount}"
+                    data-totalamount="${booking.totalAmount}"
+                    data-paymentdate="${booking.paymentDate}"
+                    data-paymentstatus="${booking.paymentStatus}"
+                    data-bookingdetailsjson='<c:out value="${booking.bookingDetailsJson}" escapeXml="true"/>'>
+                    <td>${booking.bookingId}</td>
+                    <td>${booking.customerFirstName} ${booking.customerLastName}</td>
+                    <td>${booking.bookingDate}</td>
+                    <td>${booking.pickupDate}</td>
+                    <td>${booking.returnDate}</td>
+                    <td>${booking.status}</td>
+                    <td>${booking.advanceAmount}</td>
+                    <td>${booking.paymentDate}</td>
+                    <td>${booking.paymentStatus}</td>
+                    <td>
+                        <form action="adminBooking" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="bookingId" value="${booking.bookingId}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this booking?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Set booking date automatically (for display and hidden field)
+        var today = new Date().toISOString().substr(0, 10);
+        $("#bookingDateDisplay").val(today);
+        $("#bookingDate").val(today);
+
+        // Recalculate total amount based on each booking detail’s after-meter value
+        function recalcTotals() {
+            var total = 0;
+            $("#bookingDetailsContainer .booking-details-section").each(function(){
+                var $section = $(this);
+                var rent = parseFloat($section.find(".vehicleSelect option:selected").data("rent") || 0);
+                var before = parseFloat($section.find(".beforeMeter").val() || 0);
+                var after = parseFloat($section.find(".afterMeter").val() || 0);
+                var diff = after - before;
+                if(diff < 0) diff = 0;
+                total += diff * rent;
+            });
+            $("#totalAmount").val(total.toFixed(2));
+        }
+
+        // Bind change events to recalc totals
+        $("#bookingDetailsContainer").on("input", ".afterMeter", function(){
+            recalcTotals();
+        });
+        $("#bookingDetailsContainer").on("change", ".vehicleSelect", function(){
+            // Optionally, auto-set beforeMeter here (e.g., via AJAX or a fixed value)
+            $(this).closest(".booking-details-section").find(".beforeMeter").val(0);
+            recalcTotals();
+        });
+
+        // When form is submitted, gather booking details into a JSON string
+        $("#bookingForm").submit(function(){
+            var details = [];
+            $("#bookingDetailsContainer .booking-details-section").each(function(){
+                var $section = $(this);
+                details.push({
+                    bookingDetailId: $section.find(".bookingDetailId").val(),
+                    vehicleId: $section.find(".vehicleSelect").val(),
+                    driverId: $section.find("select[name='driverIds']").val(),
+                    beforeMeeterReading: $section.find(".beforeMeter").val(),
+                    afterMeeterReading: $section.find(".afterMeter").val()
+                });
+            });
+            $("#bookingDetailsJson").val(JSON.stringify(details));
+            return true;
+        });
+
+        // Populate form for update when clicking a booking row
+        $("table tbody").on("click", "tr", function(e) {
+            if(!$(e.target).closest("form").length) {
+                var row = $(this);
+                $("#bookingId").val(row.data("bookingid"));
+                $("#customerId").val(row.data("customerid"));
+                $("#bookingDate").val(row.data("bookingdate"));
+                $("#pickupDate").val(row.data("pickupdate"));
+                $("#returnDate").val(row.data("returndate"));
+                $("#status").val(row.data("status"));
+                $("#paymentId").val(row.data("paymentid"));
+                $("#advanceAmount").val(row.data("advanceamount"));
+                $("#totalAmount").val(row.data("totalamount"));
+                $("#paymentDate").val(row.data("paymentdate"));
+                $("#paymentStatus").val(row.data("paymentstatus"));
+                $("#action").val("update");
+                $("#submitBtn").text("Update Booking");
+
+                $("#bookingDetailsContainer").empty();
+                var bookingDetailsData = row.data("bookingdetailsjson");
+                if (bookingDetailsData && Array.isArray(bookingDetailsData.bookingDetails)) {
+                    bookingDetailsData.bookingDetails.forEach(function(detail) {
+                        var $section = $("#bookingDetailsTemplate .booking-details-section").clone();
+                        $section.find(".bookingDetailId").val(detail.bookingDetailId);
+                        $section.find(".vehicleSelect").val(detail.vehicleId);
+                        $section.find("select[name='driverIds']").val(detail.driverId);
+                        $section.find(".beforeMeter").val(detail.beforeMeeterReading);
+                        $section.find(".afterMeter").val(detail.afterMeeterReading);
+                        $("#bookingDetailsContainer").append($section);
+                    });
+                } else {
+                    var $emptySection = $("#bookingDetailsTemplate .booking-details-section").clone();
+                    $("#bookingDetailsContainer").append($emptySection);
+                }
+                recalcTotals();
+            }
+        });
+
+        // Reset form
+        $("#resetBtn").click(function(){
+            $("#bookingForm")[0].reset();
+            $("#bookingId, #paymentId, #action").val("");
+            $("#submitBtn").text("Save Booking");
+            $("#bookingDetailsContainer").empty();
+            var $emptySection = $("#bookingDetailsTemplate .booking-details-section").clone();
+            $("#bookingDetailsContainer").append($emptySection);
+            recalcTotals();
+        });
+
+        // Add new booking detail section
+        $("#addDetailBtn").click(function(){
+            var $newSection = $("#bookingDetailsTemplate .booking-details-section").clone();
+            $("#bookingDetailsContainer").append($newSection);
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
+
+
 
 

@@ -104,12 +104,33 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void updateBooking(Booking updateBooking) throws SQLException {
+    public void updateBooking(BookingDTO updateBooking,List<BookingDetails> bookingDetailsList , Payment payment) throws SQLException {
+
+
+        for (BookingDetails bookingDetails : bookingDetailsList) {
+            bookingDetailsService.updateBookingDetails(bookingDetails);
+            if (bookingDetails.getDriverId() != 0) {
+                Driver driverById = driverService.getDriverById(bookingDetails.getDriverId());
+                driverById.setStatus("Available");
+                driverService.updateDriver(driverById);
+            }
+            if(bookingDetails.getVehicleId() != 0){
+                Vehicle vehicleById = vehicleService.getVehicleById(bookingDetails.getVehicleId());
+                vehicleById.setStatus("Available");
+                vehicleService.updateVehicle(vehicleById);
+            }
+        }
+        paymentService.updatePayment(payment);
         bookingDao.updateBooking(updateBooking);
     }
 
     @Override
     public void deleteBooking(int bookingId) throws SQLException {
         bookingDao.deleteBooking(bookingId);
+    }
+
+    @Override
+    public void addAdminBooking(BookingDTO bookingDto, List<BookingDetails> bookingDetailsList) {
+
     }
 }
